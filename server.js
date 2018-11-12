@@ -19,7 +19,7 @@ app.set('view engine', 'hbs');
 
 // ROUTES
 app.get('/', (req, res) => {
-    res.send('Hello World!');
+    res.render('greetings');
 });
 
 // LISTENER - only if directly run
