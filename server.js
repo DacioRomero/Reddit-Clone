@@ -1,8 +1,10 @@
 // server.js
 // DEPENDENCIES
+const path = require('path');
 const express = require('express');
 const exphbs = require('express-handlebars');
-const path = require('path');
+const bodyParser = require('body-parser');
+const expressValidator = require('express-validator');
 
 // MIDDLEWARE
 const app = express();
@@ -17,10 +19,20 @@ app.engine('hbs', exphbs({
 app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'hbs');
 
+// Use Body Parser
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(expressValidator());
+
+// Set db
+require('./data/reddit-db');
+
 // ROUTES
-app.get('/', (req, res) => {
-    res.render('greetings');
-});
+// app.get('/', (req, res) => {
+//     res.render('greetings');
+// });
+
+app.use(require('./controllers/posts'));
 
 // LISTENER - only if directly run
 if (require.main === module) {

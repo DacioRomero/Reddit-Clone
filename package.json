@@ -4,7 +4,7 @@
   "description": "Reddit Clone project for [@MakeSchool](https://github.com/MakeSchool)'s BEW 1.2 Class",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "start": "node server.js",
     "start:dev": "nodemon"
   },
@@ -19,7 +19,16 @@
   },
   "homepage": "https://github.com/DacioRomero/Reddit-Clone#readme",
   "dependencies": {
+    "body-parser": "^1.18.3",
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.0",
     "express": "^4.16.4",
-    "express-handlebars": "^3.0.0"
+    "express-handlebars": "^3.0.0",
+    "express-validator": "^5.3.0",
+    "mocha": "^5.2.0",
+    "mongoose": "^5.3.11"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.6"
   }
 }
