@@ -8,9 +8,9 @@ describe("Posts", () => {
     it("should create with valid attributes at POST /posts", () => {
         var post = { title: "post title", url: "https://www.google.com", summary: "post summary" };
 
-        Post.findOneAndRemove(post, function() {
+        Post.findOneAndRemove(post, done => {
             Post.find(function(err, posts) {
-                var postCount = posts.count;
+                const postCount = posts.count;
                 chai.request(server)
                 .post("/posts")
                 .send(post)

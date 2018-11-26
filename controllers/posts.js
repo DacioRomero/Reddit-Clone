@@ -1,21 +1,10 @@
 // controllers/posts.js
 const express = require('express');
 const router = express.Router();
-const Post = require('../models/post')
+const Post = require('../models/post');
 
-router.get('/posts/new', (req, res) => {
-    res.render('posts-new');
-});
-
-router.post('/posts', (req, res) => {
-    const post = new Post(req.body);
-
-    post.save((err, post) => {
-        return res.redirect(req.baseUrl);
-    })
-});
-
-router.get('/', (req, res) => {
+// INDEX Post
+router.get('/', (req, res) => {s
     Post.find().lean()
     .then(posts => {
         res.render('posts-index', { posts });
@@ -25,7 +14,7 @@ router.get('/', (req, res) => {
     });
 });
 
-// SUBREDDIT
+// INDEX Post - SUBREDDIT
 router.get("/n/:sub", (req, res) => {
     Post.find({ subreddit: req.params.sub }).lean()
     .then(posts => {
@@ -36,8 +25,23 @@ router.get("/n/:sub", (req, res) => {
     });
 });
 
+// NEW Post
+router.get('/posts/new', (req, res) => {
+    res.render('posts-new');
+});
+
+// CREATE Post
+router.post('/posts', (req, res) => {
+    const post = new Post(req.body);
+
+    post.save((err, post) => {
+        return res.redirect('/');
+    });
+});
+
+// SHOW Post
 router.get('/posts/:id', (req, res) => {
-    Post.findById(req.params.id).lean()
+    Post.findById(req.params.id).populate('comments').lean()
     .then(post => {
         res.render('posts-show', { post });
     })
