@@ -1,6 +1,8 @@
 <div class="row">
-    <div class="col-sm-6 col-sm-offset-3">
-        <a href="{{post.url}}" class="lead">{{post.title}}</a>
+    <div class="col-sm-6 offset-sm-3">
+        <h1 class="lead">
+            <a href="{{post.url}}">{{post.title}}</a> - {{post.author.username}}
+        </h1>
         <p>{{post.summary}}</p>
         <form action="/posts/{{post._id}}/comments" method="post">
             <textarea class='form-control' name="content" placeholder="Comment"></textarea>
@@ -8,8 +10,12 @@
                 <button type="submit">Save</button>
             </div>
         </form>
-        {{#each post.comments}}
-        <p>{{this.content}}</p>
-        {{/each}}
+        <div>
+            {{#each post.comments}}
+            <p>
+                {{this.content}} - {{this.author.username}}
+            </p>
+            {{/each}}
+        </div>
     </div>
 </div>

@@ -5,6 +5,8 @@ const express = require('express');
 const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
+const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
 
 require('dotenv').config({
     path: path.join(__dirname, '.env')
@@ -26,9 +28,26 @@ app.set('view engine', 'hbs');
 // Use Body Parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
-    extended: false
+    extended: true
 }));
 app.use(expressValidator());
+app.use(cookieParser());
+
+const checkAuth = (req, res, next) => {
+    console.log('Checking authentication')
+
+    if (req.cookies.nToken == null) {
+        req.user = null;
+    } else {
+        const token = req.cookies.nToken;
+        const decodedToken = jwt.decode(token, { complete: true }) || {};
+        req.user = decodedToken.payload;
+    }
+
+    next();
+}
+
+app.use(checkAuth);
 
 // Set db
 require('./data/reddit-db');
@@ -36,6 +55,7 @@ require('./data/reddit-db');
 // ROUTES
 app.use(require('./controllers/posts'));
 app.use(require('./controllers/comments'))
+app.use(require('./controllers/auth'))
 
 // LISTENER - only if directly run
 if (require.main === module) {

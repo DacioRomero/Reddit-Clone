@@ -2,12 +2,16 @@
 const express = require('express');
 const router = express.Router();
 const Post = require('../models/post');
+const User = require('../models/user')
+const CheckAuth = require('../checkauth');
 
 // INDEX Post
-router.get('/', (req, res) => {s
+router.get('/', (req, res) => {
+    const currentUser = req.user;
+
     Post.find().lean()
     .then(posts => {
-        res.render('posts-index', { posts });
+        res.render('posts-index', { posts, currentUser });
     })
     .catch(error => {
         console.error(error);
@@ -16,12 +20,14 @@ router.get('/', (req, res) => {s
 
 // INDEX Post - SUBREDDIT
 router.get("/n/:sub", (req, res) => {
+    const currentUser = req.user;
+
     Post.find({ subreddit: req.params.sub }).lean()
     .then(posts => {
-        res.render("posts-index", { posts });
+        res.render("posts-index", { posts, currentUser });
     })
-    .catch(err => {
-        console.log(err);
+    .catch(error => {
+        console.log(error);
     });
 });
 
@@ -31,19 +37,32 @@ router.get('/posts/new', (req, res) => {
 });
 
 // CREATE Post
-router.post('/posts', (req, res) => {
+router.post('/posts', CheckAuth, (req, res) => {
     const post = new Post(req.body);
+    post.author = req.user._id
 
-    post.save((err, post) => {
-        return res.redirect('/');
-    });
+    post.save()
+    .then(post => {
+        return User.findById(req.user._id)
+    })
+    .then(user => {
+        user.posts.unshift(post);
+        user.save();
+
+        res.redirect(`/posts/${post._id}`);
+    })
+    .catch(error => {
+        console.error(error);
+    })
 });
 
 // SHOW Post
 router.get('/posts/:id', (req, res) => {
+    const currentUser = req.user;
+
     Post.findById(req.params.id).populate('comments').lean()
     .then(post => {
-        res.render('posts-show', { post });
+        res.render('posts-show', { post, currentUser });
     })
     .catch(error => {
         console.error(error);
