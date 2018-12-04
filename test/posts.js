@@ -4,27 +4,45 @@ const should = chai.should();
 const server = require('../server');
 const Post = require("../models/post");
 
-describe("Posts", () => {
-    it("should create with valid attributes at POST /posts", () => {
-        var post = { title: "post title", url: "https://www.google.com", summary: "post summary" };
 
-        Post.findOneAndRemove(post, done => {
-            Post.find(function(err, posts) {
-                const postCount = posts.count;
-                chai.request(server)
-                .post("/posts")
-                .send(post)
-                .then(res => {
-                    Post.find(function(err, posts) {
-                        postCount.should.be.equal(posts.length + 1);
-                        res.should.have.status(200);
-                        return done();
-                    });
-                })
-                .catch(err => {
-                    return done(err);
-                });
-            });
+describe("Posts", () => {
+    const agent = chai.request.agent(server);
+
+    before(() => {
+        return agent.post('/login').send({ username: "testone", password: "password" })
+    })
+
+    after(() => {
+        agent.close();
+        server.stop();
+    })
+
+    it("should create with valid attributes at POST /posts", () => {
+        var post = {
+            title: "post title",
+            url: "https://www.google.com",
+            summary: "post summary",
+            subreddit: "sub"
+        };
+
+        return Post.countDocuments()
+        .then(count => {
+            return Promise.all([
+                count,
+                agent.post('/posts').send(post)
+            ])
+        })
+        .then(([count, res]) => {
+            console.log(count)
+            res.should.have.status(200);
+            return Promise.all([
+                count,
+                Post.countDocuments()
+            ])
+        })
+        .then(([count, newCount]) => {
+            newCount.should.be.equal(count + 1)
+            return Post.findOneAndDelete(post)
         });
     });
 });

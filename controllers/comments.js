@@ -4,7 +4,7 @@ const router = express.Router();
 const Comment = require('../models/comment');
 const Post = require('../models/post');
 const User = require('../models/user');
-const CheckAuth = require('../checkauth');
+const CheckAuth = require('../check-auth');
 
 router.post('/posts/:postId/comments', CheckAuth, (req, res) => {
     const comment = new Comment(req.body);

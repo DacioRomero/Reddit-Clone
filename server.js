@@ -50,7 +50,7 @@ const checkAuth = (req, res, next) => {
 app.use(checkAuth);
 
 // Set db
-require('./data/reddit-db');
+const mongooseConnection = require('./data/reddit-db');
 
 // ROUTES
 app.use(require('./controllers/posts'));
@@ -67,3 +67,6 @@ if (require.main === module) {
 }
 
 module.exports = app;
+module.exports.stop = () => {
+    mongooseConnection.close();
+}
