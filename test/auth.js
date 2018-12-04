@@ -3,45 +3,39 @@ const chaiHttp = require('chai-http');
 const server = require('../server');
 const User = require('../models/user');
 
-const should = chai.should();
-
+chai.should();
 chai.use(chaiHttp);
 
-const agent = chai.request.agent('http://localhost:3000');
-
 describe('User', () => {
-    it('Should not be able to login if they have not registered', done => {
-        agent.post('/login')
-            .send({
-                username: "wrong@wrong.com",
-                password: "nope"
-            })
-            .end((err, res) => {
-                res.status.should.be.equal(401);
-                done();
-            })
+    const agent = chai.request.agent(server);
+
+    after(() => {
+        agent.close();
     });
 
-    it('Should be able to register', done => {
-        User.findByIdAndRemove({ username: 'testone' }, () => {
-            agent.post('/register')
-                .send({
-                    username: 'testone',
-                    password: 'password'
-                })
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    agent.should.have.cookie('nToken');
-                    done();
-                })
+    it('Should not be able to login if they have not registered', async () => {
+        const res = await agent.post('/login')
+        .send({
+            username: "wrong@wrong.com",
+            password: "nope"
         });
+        res.should.have.status(401)
     });
 
-    it('should be able to logout', done => {
-        agent.get('/logout')
-            .end((err, res) => {
-                agent.should.not.have.cookie('nToken');
-                done();
-            });
+    it('Should be able to register', async () => {
+        const res = await agent.post('/register')
+        .send({
+            username: 'testone',
+            password: 'password'
+        });
+        res.should.have.status(200);
+        agent.should.have.cookie('nToken');
+
+        await User.findOneAndDelete({ username: 'testone'});
+    });
+
+    it('should be able to logout', async () => {
+        await agent.get('/logout');
+        agent.should.not.have.cookie('nToken');
     })
 });

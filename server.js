@@ -34,8 +34,6 @@ app.use(expressValidator());
 app.use(cookieParser());
 
 const checkAuth = (req, res, next) => {
-    console.log('Checking authentication')
-
     if (req.cookies.nToken == null) {
         req.user = null;
     } else {
@@ -50,7 +48,7 @@ const checkAuth = (req, res, next) => {
 app.use(checkAuth);
 
 // Set db
-const mongooseConnection = require('./data/reddit-db');
+const db = require('./data/reddit-db');
 
 // ROUTES
 app.use(require('./controllers/posts'));
@@ -68,5 +66,5 @@ if (require.main === module) {
 
 module.exports = app;
 module.exports.stop = () => {
-    mongooseConnection.close();
+    return db.close()
 }

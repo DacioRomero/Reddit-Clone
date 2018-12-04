@@ -1,17 +1,14 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const should = chai.should();
 const server = require('../server');
 
+chai.should();
 chai.use(chaiHttp);
 
 describe('site', () => {
-    it('Should have home page', () => {
-        return chai.request(server)
-        .get('/')
-        .then(res => {
-            res.should.have.status(200);
-            res.should.be.html;
-        });
+    it('Should have home page', async () => {
+        const res = await chai.request(server).get('/');
+        res.should.have.status(200);
+        res.should.be.html;
     });
 });
