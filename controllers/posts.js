@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const Post = require('../models/post');
 const User = require('../models/user')
-const CheckAuth = require('../check-auth');
+const CheckAuth = require('../utils/check-auth');
 
 // INDEX Post
 router.get('/', (req, res) => {

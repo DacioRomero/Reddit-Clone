@@ -12,9 +12,7 @@
         </form>
         <div>
             {{#each post.comments}}
-            <p>
-                {{this.content}} - {{this.author.username}}
-            </p>
+            {{> comment comment=this postId=../post._id}}
             {{/each}}
         </div>
     </div>
