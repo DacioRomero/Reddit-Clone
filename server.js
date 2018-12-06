@@ -33,7 +33,7 @@ app.use(bodyParser.urlencoded({
 app.use(expressValidator());
 app.use(cookieParser());
 
-const checkAuth = (req, res, next) => {
+const setUserAuth = (req, res, next) => {
     if (req.cookies.nToken == null) {
         req.user = null;
     } else {
@@ -45,7 +45,9 @@ const checkAuth = (req, res, next) => {
     next();
 }
 
-app.use(checkAuth);
+app.use(setUserAuth);
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Set db
 const db = require('./data/reddit-db');

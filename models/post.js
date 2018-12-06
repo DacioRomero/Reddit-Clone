@@ -24,9 +24,23 @@ const PostSchema = new Schema({
         ref: 'Comment'
     }],
     author: {
-        type:Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
+    },
+    upVotes: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    }],
+    downVotes: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    }],
+    voteScore: {
+        type: Number,
+        default: 0
     }
 });
 

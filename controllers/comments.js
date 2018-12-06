@@ -4,9 +4,9 @@ const router = express.Router();
 const Comment = require('../models/comment');
 const Post = require('../models/post');
 const User = require('../models/user');
-const CheckAuth = require('../utils/check-auth');
+const Authorize = require('../utils/authorize');
 
-router.post('/posts/:postId/comments', CheckAuth, (req, res) => {
+router.post('/posts/:postId/comments', Authorize, (req, res) => {
     const comment = new Comment(req.body);
     comment.author = req.user._id
 
@@ -36,7 +36,7 @@ router.get('/posts/:postId/comments/:commentId/replies/new', (req, res) => {
     res.render('replies-new');
 });
 
-router.post('/posts/:postId/comments/:commentId/replies', CheckAuth, (req, res) => {
+router.post('/posts/:postId/comments/:commentId/replies', Authorize, (req, res) => {
     const reply = new Comment(req.body);
     reply.author = req.user._id
 

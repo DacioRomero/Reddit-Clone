@@ -3,12 +3,21 @@
         <ul>
             {{#each posts}}
             <li class="list-group-item">
-                <div class="lead">
-                    <a href="/posts/{{this._id}}" class="lead">{{this.title}}</a> - {{this.author.username}}
-                </div>
-                <a href="{{this.url}}" target="_blank">{{this.url}}</a>
-                <div class="text-right">
-                    <a href="/n/{{this.subreddit}}">{{this.subreddit}}</a>
+                {{!-- TODO: Use partial --}}
+                <div class="row">
+                    <div class="col-1">
+                        <a href="/posts/{{this._id}}/vote-up" class="fas fa-arrow-circle-up vote-button"></a>
+                        <a href="/posts/{{this._id}}/vote-down" class="fas fa-arrow-circle-down vote-button"></a>
+                    </div>
+                    <div class="col">
+                        <div class="lead">
+                            <a href="/posts/{{this._id}}" class="lead">{{this.title}}</a> - u/{{this.author.username}}
+                        </div>
+                        <a href="{{this.url}}" target="_blank">{{this.url}}</a>
+                        <div class="text-right">
+                            <a href="/n/{{this.subreddit}}">{{this.subreddit}}</a>
+                        </div>
+                    </div>
                 </div>
             </li>
             {{/each}}

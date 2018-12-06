@@ -1,9 +1,9 @@
-<div class="col-12 card pl-4">
+<div class="col-12 card pl-4 pr-0 mt-4">
     <div class="card-body">
-        <h6 class="card-title">{{comment.author.username}}</h5>
+        <h6 class="card-title pt-4">u/{{comment.author.username}}</h5>
         <p>{{comment.content}}</p>
         <a class="card-link" href="/posts/{{postId}}/comments/{{comment._id}}/replies/new">Reply</a>
-        <div class="mr-auto">
+        <div class="">
             {{#each comment.replies}}
             {{> comment comment=this postId=../postId}}
             {{/each}}

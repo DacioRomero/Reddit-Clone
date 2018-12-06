@@ -1,0 +1,11 @@
+.vote-button {
+    color: grey;
+}
+
+.vote-button:hover {
+    text-decoration: none;
+}
+
+.vote-button.voted {
+    color: orange;
+}

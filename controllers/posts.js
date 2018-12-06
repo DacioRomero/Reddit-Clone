@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const Post = require('../models/post');
 const User = require('../models/user')
-const CheckAuth = require('../utils/check-auth');
+const CheckAuth = require('../utils/authorize');
 
 // INDEX Post
 router.get('/', (req, res) => {
@@ -53,7 +53,7 @@ router.post('/posts', CheckAuth, (req, res) => {
     })
     .catch(error => {
         console.error(error);
-    })
+    });
 });
 
 // SHOW Post
@@ -66,6 +66,36 @@ router.get('/posts/:id', (req, res) => {
     })
     .catch(error => {
         console.error(error);
+    });
+});
+
+router.put('/posts/:id/vote-:direction', CheckAuth, (req, res) => {
+    Post.findById(req.params.id)
+    .then(post => {
+        switch(req.params.direction.toUpperCase()) {
+            case 'UP':
+                post.upVotes.push(req.user._id);
+                post.voteScore += 1;
+                post.save();
+                return res.status(200).json({ voted: true });
+            case 'DOWN':
+                post.downVotes.push(req.user._id);
+                post.voteScore -= 1;
+                post.save();
+                return res.status(200).json({ voted: false });
+            default:
+                return res.status(400).json({
+                    voted: false,
+                    reason: 'Invalid vote'
+                });
+        }
+    })
+    .catch(error => {
+        console.error(error);
+        res.status(500).json({
+            voted: false,
+            reason: `Server error: ${error.message}`
+        });
     });
 });
 
