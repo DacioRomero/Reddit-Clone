@@ -31,12 +31,12 @@ const PostSchema = new Schema({
     upVotes: [{
         type: Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        unique: true
     }],
     downVotes: [{
         type: Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        unique: true
     }],
     voteScore: {
         type: Number,
