@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const Autopopulate = require('../utils/autopopulate');
+const Populate = require('../utils/populate');
 
 const PostSchema = new Schema({
     title: {
@@ -44,9 +44,8 @@ const PostSchema = new Schema({
     }
 });
 
-// https://stackoverflow.com/a/30052105/10336544
-// Makes using posts easier as you almost always want author info
-PostSchema.pre('findOne', Autopopulate('author'));
-PostSchema.pre('find', Autopopulate('author'));
+PostSchema
+    .pre('findOne', Populate('author'))
+    .pre('find', Populate('author'));
 
 module.exports = mongoose.model('Post', PostSchema);
