@@ -1,7 +1,7 @@
 // models/comment.js
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const Populate = require('../utils/populate');
+const Populate = require('mongoose-populate');
 
 const CommentSchema = new Schema({
     content: {
