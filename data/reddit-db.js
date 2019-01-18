@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 const assert = require('assert');
 
-const url = 'mongodb://localhost/reddit-db';
+const url = process.env.MONGODB_URI || 'mongodb://localhost/reddit-db';
 mongoose.Promise = global.Promise;
 mongoose.connect(url, { useNewUrlParser: true }, (err, db) => {
     assert.equal(null, err);
